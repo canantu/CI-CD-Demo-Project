@@ -110,37 +110,39 @@ Q: How do I use this tag in maven command for test execution? Because Runner cla
 
 Q: we have configuration.properties file, so why we need to specify some parameters with -D ?
 
-Following question: how to use same project for execution on different browser at the same time?
+    Following question: how to use same project for execution on different browser at the same time?
 
-How you can run smoke test on different environment at the same time?
+    How you can run smoke test on different environment at the same time?
 
 
-A: I can parametrize test execution command.
+    A: I can parameterize test execution command.
 
-If I want to specify environment parameter with maven command, I use -D, e.g. -Denvironment=qa, then I can read it in java code by using System.getProperty()--> System.getProperty("environment").
+    If I want to specify environment parameter with maven command, I use -D, e.g. -Denvironment=qa,
+    then I can read it in java code by using:
+            System.getProperty()--> System.getProperty("environment").
 
 
 Q: How do I run smoke tests on chrome and firefox at the same time in Jenkins?
 
-A: I create 2 jobs (chrome-smoke-test, firefox-smoke-test). All steps are the same except maven command:
+    A: I create 2 jobs (chrome-smoke-test, firefox-smoke-test). All steps are the same except maven command:
 
 
-for chrome: test -DBROWSER="chrome"
+    for chrome: test -DBROWSER="chrome"
 
-for firefox: test -DBROWSER="firefox"
+    for firefox: test -DBROWSER="firefox"
 
-and I schedule both jobs to execute at 5am (if needed).
+    and I schedule both jobs to execute at 5am (if needed).
 
-Driver class example for parameterizing browser type with maven command:
+    Driver class example for parameterizing browser type with maven command:
 
 
-    public static WebDriver getDriver() {
-        if (driver == null) {
-            if (System.getProperty("BROWSER") == null) {
-                browser = ConfigurationReader.getProperty("browser");
-            } else {
-                browser = System.getProperty("BROWSER");
-            }
+        public static WebDriver getDriver() {
+            if (driver == null) {
+                if (System.getProperty("BROWSER") == null) {
+                    browser = ConfigurationReader.getProperty("browser");
+                } else {
+                    browser = System.getProperty("BROWSER");
+                }
 
 Q: How to start Jenkins job manually?
 A: Click build now.
@@ -148,6 +150,7 @@ A: Click build now.
 
 Q: How to change environment withing maven command for test execution?
 
+          String environment = System.getProperty("environment")
           if (environment != null) {
             switch (environment) {
                 case "qa":
@@ -165,55 +168,56 @@ Q: How to change environment withing maven command for test execution?
             Driver.getDriver().get(url);
         }
 Q: How you run smoke tests on different environments at the same time?
-A: I create multiple jenkins jobs, and in every job I specify environment parameter as part of maven command to target different environments for tests execution.
 
-1st job
-    test -Denvironment="qa"
+        A: I create multiple jenkins jobs, and in every job I specify environment parameter as part of maven command to target different environments for tests execution.
 
-2nd job
-    test -Denvironment="stage"
+        1st job
+            test -Denvironment="qa"
 
-3rd job
-    test -Denvironment="dev"
+        2nd job
+            test -Denvironment="stage"
+
+        3rd job
+            test -Denvironment="dev"
 
 Q: What Is the difference between System.getProperty and ConfigReader.get property?
 
-ConfigReader --> reads only your properties file, wheres System class reads system properties.
+    ConfigReader --> reads only your properties file, wheres System class reads system properties.
 
-https://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html
+    https://docs.oracle.com/javase/tutorial/essential/environment/sysprop.html
 
 Q: Can we use 2 or more parameters at the same time?
 
-A: Yes
+        A: Yes
 
-test -Denvironment="qa" -Dbrowser="chrome" -DclassName=TestRunner23
+        test -Denvironment="qa" -Dbrowser="chrome" -DclassName=TestRunner23
 
-#Create smoke test job
+        #Create smoke test job
 
-1. Go to Jenkins dashboard
-2. New item
-3. name --> smoke-test
-   type --> freestyle project
+        1. Go to Jenkins dashboard
+        2. New item
+        3. name --> smoke-test
+           type --> freestyle project
 
-4. Job steps:
+        4. Job steps:
 
-    - SCM
-        git --> https://github.com/vasyafomiuk/demo-project.git
+            - SCM
+                git --> https://github.com/vasyafomiuk/demo-project.git
 
-    - Build
-       Invoke top-level maven targets
-         test -Dcucumber.filter.tags="@smoke"
+            - Build
+               Invoke top-level maven targets
+                 test -Dcucumber.filter.tags="@smoke"
 
-    - Post build
-       Cucumber reports
+            - Post build
+               Cucumber reports
 
-      apply&save
+              apply&save
 
-      Build now!
+              Build now!
 
-To use multiple tags:
+        To use multiple tags:
 
-test -Dcucumber.filter.tags="@smoke or @sanity"
+        test -Dcucumber.filter.tags="@smoke or @sanity"
 
 
 #Create regression test suite job
@@ -307,3 +311,7 @@ Stage can have steps
     if you have a maven project, you can use one command to run the tests
     lifecycle-test
     maven-surefire-plugin support to execute tests, we provide runner class. without this plugin jenkins would not work.
+
+- instead of tags, feature files can be ordered into folders, and for regression, these feature folder paths
+can be given in runner class (regression can be specified by tags or by feature folders)
+

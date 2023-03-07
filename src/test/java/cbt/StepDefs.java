@@ -24,6 +24,7 @@ public class StepDefs {
         Driver.getDriver().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         Driver.getDriver().manage().window().maximize();
         Driver.getDriver().get("http://etsy.com");
+        Driver.getDriver().findElement(By.xpath("//button[text()='Akzeptieren']")).click();
 
     }
 
