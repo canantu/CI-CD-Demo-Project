@@ -25,84 +25,87 @@ For test execution, we just need to do all steps until test.
 
 Q: How to make my java/maven project execute tests in Jenkins?
 
-A: First of all, add maven-surefire or maven-failsafe plugin.
+        A: First of all, add maven-surefire or maven-failsafe plugin.
 
-pom.xml
-
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <testFailureIgnore>true</testFailureIgnore>
-                    <includes>
-                        <include>**/*Test.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-<include> has to match test class name.
-
-use * (wildcard) to match and character.
-
-e.g. *CukesRunner.java will match 1CukesRunner.java, 2CukesRunner.java, etc...
+        pom.xml
 
 
-<include>**/*Test.java</include> - any test class that includes Test in the name will be picked up by maven-surefire plugin during test execution phase.
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <testFailureIgnore>true</testFailureIgnore>
+                            <includes>
+                                <include>**/*Test.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
+        <include> has to match test class name.
+
+        use * (wildcard) to match and character.
+
+        e.g. *CukesRunner.java will match 1CukesRunner.java, 2CukesRunner.java, etc...
 
 
-Any class with @RunWith(Cucumber.class) considered as a test class as well. It's just a custom test class. Traditional test looks like method with a @Test annotation:
+        <include>**/*Test.java</include> - any test class that includes Test in the name will be picked up
+        by maven-surefire plugin during test execution phase.
 
 
-@Test
-public void test() {
-    Assert.assertEquals("apple", getString());
-}
+        Any class with @RunWith(Cucumber.class) considered as a test class as well. It's just a custom test class.
+        Traditional (conventional) test looks like method with a @Test annotation:
+
+
+        @Test
+        public void test() {
+            Assert.assertEquals("apple", getString());
+        }
 
 Q: How to create a Jenkins job?
 
 
-Usually we use freestyle project or pipeline script.
+        - Usually we use freestyle project or pipeline script.
 
-For freestyle project:
+        - For freestyle project:
 
-1. Provide github URL of the project
-2. Setup schedule (H 5 * * * means every morning at 5am (optional))
-     H - allows jenkins to distribute load evenly. Let's say there 5 job execution scheduled at 5am. To improve performance, we can say that execute those 5 jobs around 5 am as per convenience.
+            1. Provide github URL of the project
+            2. Setup schedule (H 5 * * * means every morning at 5:00 am (optional))
+                 H - allows jenkins to distribute load evenly. Let's say there 5 job execution scheduled at 5am.
+                 To improve performance, we can say that execute those 5 jobs around 5:00 am as per convenience.
 
-     But if we are strict in terms time, specify some minutes instead of H:
+                 But if we are strict in terms of time, specify some minutes instead of H:
 
-     0 5 * * *
+                 0 5 * * *
 
-     means strictly 5:00am
+                 means strictly at 5:00 am
 
-3. Build -> Invoke top level maven targets -> test
-4. Post Build --> cucumber reports
+            3. Build -> Invoke top level maven targets -> test
+            4. Post Build --> cucumber reports
 
 
 Q: How do you create a smoke test job? How do you label your tests? How do you know which test belongs to smoke test?
 
-I use cumber tag: @smoke
+    I use cucumber tags: @smoke
 
 
-How do I use this tag in maven command for test execution? Because Runner class can be overridden.
+Q: How do I use this tag in maven command for test execution? Because Runner class can be overridden.
 
-mvn test -Dcucumber.filter.tags="@smoke"
+    mvn test -Dcucumber.filter.tags="@smoke"
 
 
--D - used to specify some parameters
+    -D - used to specify some parameters
 
-cucumber.filter.tags - used to override tags specifications in Test runner class.
+    cucumber.filter.tags - used to override tags specifications in Test runner class.
 
-specify in command line        read in java code
--DBROWSER=chrome --> System.getProperty("BROWSER") -- chrome
+    specify in command line        read in java code
+    -DBROWSER=chrome --> System.getProperty("BROWSER") -- chrome
 
-specify in command line        read in java code
--Denvironment=qa --> System.getProperty("environment") -- qa
+    specify in command line        read in java code
+    -Denvironment=qa --> System.getProperty("environment") -- qa
 
 
 Q: we have configuration.properties file, so why we need to specify some parameters with -D ?
@@ -255,7 +258,7 @@ String testSuite = {"Test1", "Test2"};
 
 Jenkins Pipeline (or simply "Pipeline" with a capital "P") is a suite of plugins which supports implementing and integrating continuous delivery pipelines into Jenkins
 
-Jenkins Pipeline - it's a job written with a DSL (jenkin domain speccific language based on Groovy (Groovy is based on Java))
+Jenkins Pipeline - it's a job written with a DSL (jenkins domain specific language based on Groovy (Groovy is based on Java))
 
 
 Jenkins Pipeline is mostly used for creating production pipelines, but we can use it to create jobs for testing as well. Since scripting gives more freedom (we create variables, put if/else conditions, put try/catch block, execute tasks in parallel) sometimes it's a good idea to use pipeline script for test automation jobs.
@@ -294,3 +297,13 @@ Stage can have steps
 
 *********************************************************
 
+- advantages of jenkins: we use our laptop for test execution at the same time continue to work
+
+    - call code from github
+    - build the code
+    - execute the code on remote
+
+    mvn test  -- command from console
+    if you have a maven project, you can use one command to run the tests
+    lifecycle-test
+    maven-surefire-plugin support to execute tests, we provide runner class. without this plugin jenkins would not work.
