@@ -260,12 +260,15 @@ String testSuite = {"Test1", "Test2"};
  Scenario: Change user profile picture
 
 
-Jenkins Pipeline (or simply "Pipeline" with a capital "P") is a suite of plugins which supports implementing and integrating continuous delivery pipelines into Jenkins
+Jenkins Pipeline (or simply "Pipeline" with a capital "P") is a suite of plugins which supports implementing
+and integrating continuous delivery pipelines into Jenkins
 
 Jenkins Pipeline - it's a job written with a DSL (jenkins domain specific language based on Groovy (Groovy is based on Java))
 
 
-Jenkins Pipeline is mostly used for creating production pipelines, but we can use it to create jobs for testing as well. Since scripting gives more freedom (we create variables, put if/else conditions, put try/catch block, execute tasks in parallel) sometimes it's a good idea to use pipeline script for test automation jobs.
+Jenkins Pipeline is mostly used for creating production pipelines, but we can use it to create jobs for testing as well.
+Since scripting gives more freedom (we create variables, put if/else conditions, put try/catch block,
+execute tasks in parallel) sometimes it's a good idea to use pipeline script for test automation jobs.
 
 node {
     stage('Clone code') {
@@ -281,7 +284,9 @@ node {
     }
 
     stage('Generate report'){
-           cucumber failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/*.json', pendingStepsNumber: -1, skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
+           cucumber failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1,
+           fileIncludePattern: '**/*.json', pendingStepsNumber: -1, skippedStepsNumber: -1,
+           sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
     }
 }
 
@@ -314,4 +319,12 @@ Stage can have steps
 
 - instead of tags, feature files can be ordered into folders, and for regression, these feature folder paths
 can be given in runner class (regression can be specified by tags or by feature folders)
+
+- cloud: cost, flexibility, scalability
+
+- docker:
+    - version conflict problems, automatic updates
+    - in the same server, it is difficult to keep all environments with different configuration
+    - keeping all drivers and services in the same configuration, dependencies was a problem
+    - docker container provides a package with all dependencies into a standard unit
 
