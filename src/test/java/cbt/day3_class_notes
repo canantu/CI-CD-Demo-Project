@@ -1,0 +1,102 @@
+Today is October 25, 2021
+
+Agenda: Review
+
+Diagram: https://miro.com/app/board/o9J_lZ1yLEI=/
+
+#########
+
+Q: Could there be any situation where test passes on our local browser, but fails on server??
+
+A: yes, especially if remote server is linux-based and local is windows.
+
+ - Screen resolution (scroll to element before interaction - JavaScriptExecuter Actions)
+ - Synchronization (add more waits)
+ - path to downloaded content (specify path in ChromeOptions/FirefoxOptions)
+
+    Map<String, Object> prefs = new HashMap<String, Object>();
+    prefs.put("download.default_directory",  System.getProperty("user.dir")+ File.separator + "externalFiles" + File.separator + "downloadFiles");
+    ChromeOptions options = new ChromeOptions();
+    options.setExperimentalOption("prefs", prefs);
+    ChromeDriver driver = new ChromeDriver(options);
+
+ Break until 11:15 EST
+ please take extra 5 minutes since we ended later.
+
+
+Physical server - looks like big computer
+Virtual Server (Virtual Machine aka VM) - virtual representation of physical server, that exists within physical server. Since we cannot install more than 1 OS on the server, to share server we can install many VM on top of real physical server.
+
+
+Version of Selenium Grid that we use is 3.141
+
+6. Selenium Grid Hub and nodes inside containers
+5. DOCKER CONTAINER
+4. DOCKER
+3. AWS EC2 (VM)
+2. HOST OS
+1. physical server
+
+    Q: Tell me about your selenium grid setup.
+    A: My selenium grid consists of 10 (5 - 100) nodes and hub. We are using One AWS EC2 instance with Docker to run Selenium Grid. Mostly, we are doing testing only on the Chrome browser.
+
+    1 container = 1 node = 1 browser = 1 test at the time
+
+    10 nodes = 10 browsers = 10 execution tests at the time
+
+
+Details: every node is running inside a container along with a browser.
+
+1 node supports execution of 1 test at the time.
+
+
+    Q: Why you don't use Selenium Grid 4?
+    A: Don't break something that is working, but actually there is no stable version yet (as of today). We are avoiding any beta or alpha versions of tools.
+
+
+### This is stuff is for DEVOPS.
+
+    Q: How to increase number on nodes in Selenium Grid with Docker?
+
+    A: run command on the server that is running grid.
+
+        docker-compose up -d --scale chrome=num
+
+        *where num is desirable number of chrome nodes. By default it's one.
+        *where chrome is a service name
+
+    Q: How to start selenium grid with docker?
+
+    A: run command on the server that is running grid:
+
+        docker-compose up -d
+
+    Q: How to STOP selenium grid with docker?
+
+    A: run command on the server that is running grid:
+
+        docker-compose down
+
+    Q: Docker compose ? How it is related to docker?
+
+    A: Docker compose helps to launch group of containers all together. Inside a file (docker-compose.yml) we specify which containers we want to launch.
+
+    Q: How to turn off specific node (with docker containers)
+
+    A: run command on the server that is running grid:
+        docker container kill <container id>
+
+    Q: How to see container id and what are the containers currently running?
+    A: run command on the server that is running grid:
+
+        docker container ps
+
+        first column is for container id.
+
+### This is stuff is for DEVOPS.
+
+Q: Can I know about this as a tester?
+A: Yes, but not required.
+
+
+

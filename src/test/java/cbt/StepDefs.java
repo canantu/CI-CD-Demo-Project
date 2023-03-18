@@ -3,6 +3,7 @@ package cbt;
 import static org.junit.Assert.fail;
 
 import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -19,6 +20,10 @@ import java.util.concurrent.TimeUnit;
 
 public class StepDefs {
 
+    @Before
+    public void setup(){
+        Driver.closeDriver();
+    }
     @Given("^I am on the home page$")
     public void i_am_on_the_home_page() throws Throwable {
         Driver.getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -51,5 +56,7 @@ public class StepDefs {
         }
         Driver.closeDriver();
     }
+
+
 
 }

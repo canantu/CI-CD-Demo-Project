@@ -9,21 +9,25 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.net.URL;
+import java.util.HashMap;
 
 public class Driver {
-    static String browser;
 
     private Driver() {
     }
 
+    static String browser;
+    static ChromeOptions option = new ChromeOptions();
     private static WebDriver driver;
 
     public static WebDriver getDriver() {
+        option.addArguments("--remote-allow-origins=*");
         if (driver == null) {
             if (System.getProperty("BROWSER") == null) {
                 browser = ConfigurationReader.getProperty("browser");
@@ -39,6 +43,19 @@ public class Driver {
                         URL url = new URL("http://" + gridAddress + ":4444/wd/hub");
                         DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
                         desiredCapabilities.setBrowserName("chrome");
+
+                        /*
+                        String downloadFilepath = "/Users/apple/Downloads";
+                        HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+                        chromePrefs.put("profile.default_content_settings.popups", 0);
+                        chromePrefs.put("download.default_directory", downloadFilepath);
+                        ChromeOptions options = new ChromeOptions();
+                        options.setExperimentalOption("prefs", chromePrefs);
+                        desiredCapabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+                        desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
+
+                         */   // setting download path for remote browser
+
                         driver = new RemoteWebDriver(url, desiredCapabilities);
                     } catch (Exception e) {
                         e.printStackTrace();
